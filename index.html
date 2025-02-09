@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra Scientific Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 30px;
+            background-color: #111111;
+            color: white;
+        }
+        .calculator {
+            display: inline-block;
+            text-align: center;
+            background: #444;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .display {
+            width: 100%;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: white;
+            background: #333;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .button {
+            font-size: 1em;
+            width: 60px;
+            height: 60px;
+            margin: 3px;
+            border: none;
+            border-radius: 10px;
+            background: #333;
+            color: white;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #555;
+        }
+        .button.operator {
+            background: #e67e22;
+        }
+        .button.operator:hover {
+            background: #d35400;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ultra Scientific Calculator</h1>
+    <div class="calculator">
+        <input type="text" class="display" id="display" disabled>
+        <div>
+            <button class="button" onclick="appendNumber(7)">7</button>
+            <button class="button" onclick="appendNumber(8)">8</button>
+            <button class="button" onclick="appendNumber(9)">9</button>
+            <button class="button operator" onclick="setOperation('divide')">÷</button>
+        </div>
+        <div>
+            <button class="button" onclick="appendNumber(4)">4</button>
+            <button class="button" onclick="appendNumber(5)">5</button>
+            <button class="button" onclick="appendNumber(6)">6</button>
+            <button class="button operator" onclick="setOperation('multiply')">×</button>
+        </div>
+        <div>
+            <button class="button" onclick="appendNumber(1)">1</button>
+            <button class="button" onclick="appendNumber(2)">2</button>
+            <button class="button" onclick="appendNumber(3)">3</button>
+            <button class="button operator" onclick="setOperation('subtract')">−</button>
+        </div>
+        <div>
+            <button class="button" onclick="appendNumber(0)">0</button>
+            <button class="button" onclick="appendDot()">.</button>
+            <button class="button operator" onclick="calculate()">=</button>
+            <button class="button operator" onclick="setOperation('add')">+</button>
+        </div>
+        <div>
+            <button class="button" onclick="clearDisplay()">C</button>
+            <button class="button operator" onclick="setOperation('sqrt')">√</button>
+            <button class="button operator" onclick="setOperation('square')">x²</button>
+            <button class="button operator" onclick="setOperation('inverse')">1/x</button>
+        </div>
+        <div>
+            <button class="button operator" onclick="setOperation('sin')">sin</button>
+            <button class="button operator" onclick="setOperation('cos')">cos</button>
+            <button class="button operator" onclick="setOperation('tan')">tan</button>
+        </div>
+        <div>
+            <button class="button operator" onclick="setOperation('log')">log</button>
+            <button class="button operator" onclick="setOperation('exp')">exp</button>
+            <button class="button operator" onclick="setOperation('ln')">ln</button>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '';
+        let previousInput = '';
+        let operation = null;
+
+        function appendNumber(number) {
+            currentInput += number;
+            updateDisplay();
+        }
+
+        function appendDot() {
+            if (!currentInput.includes('.')) {
+                currentInput += '.';
+                updateDisplay();
+            }
+        }
+
+        function setOperation(op) {
+            if (currentInput === '') return;
+            if (previousInput !== '') {
+                calculate();
+            }
+            operation = op;
+            previousInput = currentInput;
+            currentInput = '';
+        }
+
+        function calculate() {
+            let result;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+            if (isNaN(prev) || isNaN(current)) return;
+            switch (operation) {
+                case 'add':
+                    result = prev + current;
+                    break;
+                case 'subtract':
+                    result = prev - current;
+                    break;
+                case 'multiply':
+                    result = prev * current;
+                    break;
+                case 'divide':
+                    result = prev / current;
+                    break;
+                case 'sqrt':
+                    result = Math.sqrt(prev);
+                    break;
+                case 'square':
+                    result = prev * prev;
+                    break;
+                case 'inverse':
+                    result = 1 / prev;
+                    break;
+                case 'sin':
+                    result = Math.sin(prev);
+                    break;
+                case 'cos':
+                    result = Math.cos(prev);
+                    break;
+                case 'tan':
+                    result = Math.tan(prev);
+                    break;
+                case 'log':
+                    result = Math.log10(prev);
+                    break;
+                case 'exp':
+                    result = Math.exp(prev);
+                    break;
+                case 'ln':
+                    result = Math.log(prev);
+                    break;
+                default:
+                    return;
+            }
+            currentInput = result;
+            operation = null;
+            previousInput = '';
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            previousInput = '';
+            operation = null;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').value = currentInput;
+        }
+    </script>
+</body>
+</html>
